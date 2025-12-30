@@ -3,15 +3,18 @@ import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import MobileSidebar from "./Sidebar";
 
 const Navbar = async () => {
   const user = await currentUser();
-  console.log(user);
+
   const role = user?.publicMetadata.role as string;
   return (
-    <div className="flex items-center justify-end lg:justify-between px-4">
+    <div className="flex items-center justify-between lg:justify-between px-6">
       {/* SEARCH BAR */}
-      <div className=""></div>
+      <div>
+        <MobileSidebar />
+      </div>
       {/* ICONS AND USER */}
       <div className="flex items-center gap-6 p-4">
         <Link href="/list/announcements">

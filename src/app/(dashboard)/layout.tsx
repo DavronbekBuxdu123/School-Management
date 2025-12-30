@@ -3,28 +3,26 @@ import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function DashBoardLayout({
+export default async function DashBoardLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <div className=" flex ">
-      {/* LEFT */}
-      <div className="hidden md:block  md:w-[8%] lg:w-[16%]  p-4">
-        <Link
-          className="flex items-center justify-center lg:justify-start  gap-2"
-          href="/"
-        >
+    <div className="flex min-h-screen">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex md:flex-col md:w-64 p-4 bg-white shadow-md">
+        <Link className="flex items-center justify-start gap-2 mb-6" href="/">
           <Image src="/logo.png" alt="logo" width={32} height={32} />
-          <span className="hidden lg:block">DavaSchool</span>
+          <span className="text-xl font-bold">DavaSchool</span>
         </Link>
         <Menu />
       </div>
-      {/* RIGHT */}
-      <div className="w-[100%]  md:w-[92%] lg:w-[84%]  bg-gray-100 flex flex-col ">
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col bg-gray-100">
         <Navbar />
-        {children}
+        <main className="p-4">{children}</main>
       </div>
     </div>
   );

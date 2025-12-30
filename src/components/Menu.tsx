@@ -1,3 +1,4 @@
+"use client";
 const menuItems = [
   {
     title: "MENYU",
@@ -113,12 +114,13 @@ const menuItems = [
   },
 ];
 
-import { currentUser } from "@clerk/nextjs/server";
+import { useUser } from "@clerk/nextjs";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-const Menu = async () => {
-  const user = await currentUser();
+const Menu = () => {
+  const { user } = useUser();
   const role = user?.publicMetadata.role as string;
 
   return (
@@ -136,7 +138,7 @@ const Menu = async () => {
                     className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-lamaSkyLight"
                   >
                     <Image src={item.icon} alt="" width={20} height={20} />
-                    <span className="hidden lg:block">{item.label}</span>
+                    <span className=" lg:block">{item.label}</span>
                   </Link>
                 );
               }
