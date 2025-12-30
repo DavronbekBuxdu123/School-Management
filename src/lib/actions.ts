@@ -1,12 +1,16 @@
 "use server";
+import { StudentSchema } from "./../components/forms/StudentForm";
 
 import { createClerkClient } from "@clerk/nextjs/server";
 import prisma from "./prisma";
+import { ClassSchema } from "@/components/forms/ClassForm";
+import { SubjectSchema } from "@/components/forms/SubjectForm";
+import { TeacherSchema } from "@/components/forms/TeacherFrom";
 const clerk = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY!,
 });
 // Fanlarni yaratish
-export async function createSubject(data) {
+export async function createSubject(data: SubjectSchema) {
   try {
     await prisma.subject.create({
       data: {
@@ -25,7 +29,7 @@ export async function createSubject(data) {
   }
 }
 // Fanlarni yangilash
-export async function updateSubject(data) {
+export async function updateSubject(data: SubjectSchema) {
   try {
     await prisma.subject.update({
       where: { id: data.id },
@@ -58,7 +62,7 @@ export async function deleteSubject(data: { id: number }) {
 }
 
 // Sinf yaratish
-export async function createClass(data) {
+export async function createClass(data: ClassSchema) {
   try {
     await prisma.class.create({
       data,
@@ -70,7 +74,7 @@ export async function createClass(data) {
   }
 }
 // Sinfni yangilash
-export async function updateClass(data) {
+export async function updateClass(data: ClassSchema) {
   try {
     await prisma.class.update({
       where: { id: data.id },
@@ -98,7 +102,7 @@ export async function deleteClass(data: { id: number }) {
 }
 
 // O'Oqituvchi yaratish
-export const createTeacher = async (data) => {
+export const createTeacher = async (data: TeacherSchema) => {
   try {
     const user = await clerk.users.createUser({
       username: data.username,
@@ -138,7 +142,7 @@ export const createTeacher = async (data) => {
   }
 };
 // Oqituvchi update
-export const updateTeacher = async (data) => {
+export const updateTeacher = async (data: TeacherSchema) => {
   if (!data.id) {
     return { success: false, error: true };
   }
@@ -196,7 +200,7 @@ export async function deleteTeacher(data: { id: string }) {
 }
 
 // Studentlarni yaratish
-export const createStudent = async (data) => {
+export const createStudent = async (data: StudentSchema) => {
   try {
     const classItem = await prisma.class.findUnique({
       where: { id: data.classId },
@@ -239,7 +243,7 @@ export const createStudent = async (data) => {
     return { success: false, error: true };
   }
 };
-export const updateStudent = async (data) => {
+export const updateStudent = async (data: StudentSchema) => {
   if (!data.id) {
     return { success: false, error: true };
   }

@@ -14,7 +14,7 @@ export const classSchema = z.object({
   supervisorId: z.coerce.string().optional(),
 });
 
-type Inputs = z.infer<typeof classSchema>;
+export type ClassSchema = z.infer<typeof classSchema>;
 
 function ClassForm({
   type,
@@ -23,7 +23,7 @@ function ClassForm({
   relatedData,
 }: {
   type: string;
-  data?: Partial<Inputs>;
+  data?: Partial<ClassSchema>;
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) {
@@ -31,7 +31,7 @@ function ClassForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm({
     resolver: zodResolver(classSchema),
     defaultValues:
       type === "update"
@@ -48,7 +48,7 @@ function ClassForm({
   const [error, setError] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const router = useRouter();
-  const onSubmit: SubmitHandler<Inputs> = (formData) => {
+  const onSubmit: SubmitHandler<ClassSchema> = (formData) => {
     setError(false);
     setSuccess(false);
 
@@ -125,7 +125,7 @@ function ClassForm({
             <select
               className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
               {...register("supervisorId")}
-              defaultValue={data?.teachers}
+              defaultValue={data?.supervisorId}
             >
               {teachers.map(
                 (teacher: { id: string; name: string; surname: string }) => (

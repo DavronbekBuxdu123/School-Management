@@ -53,7 +53,7 @@ function StudentForm({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<StudentSchema>({
+  } = useForm({
     resolver: zodResolver(studentSchema),
     defaultValues: {
       id: data?.id ? String(data.id) : undefined,
@@ -66,7 +66,6 @@ function StudentForm({
       bloodType: data?.bloodType || "",
       birthday: data?.birthday ? new Date(data.birthday) : undefined,
       sex: data?.sex || "MALE",
-      subjects: data?.subjects || [],
     },
   });
 

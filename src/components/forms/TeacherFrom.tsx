@@ -63,7 +63,7 @@ function TeacherFrom({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<TeacherSchema>({
+  } = useForm({
     resolver: zodResolver(teacherSchema),
     defaultValues: {
       id: data?.id,
@@ -270,7 +270,7 @@ function TeacherFrom({
                 className="ring-[1.5px] p-2 rounded-md text-black"
                 {...register("subjects")}
               >
-                {subjects.map((subject) => (
+                {subjects.map((subject: { id: number; name: string }) => (
                   <option key={subject.id} value={String(subject.id)}>
                     {subject.name}
                   </option>

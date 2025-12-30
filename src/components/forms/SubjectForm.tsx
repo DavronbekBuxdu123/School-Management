@@ -7,12 +7,12 @@ import React, { Dispatch, SetStateAction, useTransition } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export const Subjectschema = z.object({
+export const subjectschema = z.object({
   id: z.coerce.number().optional(),
   name: z.string().min(3, { message: "Fan nomi 3 harfdan kam bo’lmasin!" }),
   teachers: z.array(z.string()),
 });
-type Inputs = z.infer<typeof Subjectschema>;
+export type SubjectSchema = z.infer<typeof subjectschema>;
 
 function SubjectForm({
   type,
@@ -21,7 +21,7 @@ function SubjectForm({
   relatedData,
 }: {
   type: string;
-  data?: Partial<Inputs>;
+  data?: Partial<SubjectSchema>;
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) {
@@ -29,12 +29,12 @@ function SubjectForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(Subjectschema),
+  } = useForm({
+    resolver: zodResolver(subjectschema),
     defaultValues: {
-      id: data?.id ?? undefined, // optional
+      id: data?.id ?? undefined,
       name: data?.name ?? "",
-      teachers: data?.teachers ?? [], // string[]
+      teachers: data?.teachers ?? [],
     },
   });
 
@@ -44,7 +44,7 @@ function SubjectForm({
   const router = useRouter();
   const teachers = relatedData?.teachers || [];
   console.log(teachers);
-  const onSubmit: SubmitHandler<Inputs> = (formData) => {
+  const onSubmit: SubmitHandler<SubjectSchema> = (formData) => {
     setError(false);
     setSuccess(false);
 
