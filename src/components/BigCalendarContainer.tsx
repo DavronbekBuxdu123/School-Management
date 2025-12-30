@@ -1,3 +1,5 @@
+"use client";
+
 import prisma from "@/lib/prisma";
 
 import { adjustScheduleToCurrentWeek } from "@/lib/utils";
