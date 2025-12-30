@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
-  title: "Lama Dev School Management Dashboard",
+  title: "Dava Dev School Management Dashboard",
   description: "Next.js School Management System",
 };
 
