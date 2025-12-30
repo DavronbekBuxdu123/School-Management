@@ -1,46 +1,117 @@
-import React from "react";
+"use client";
+import React, { Dispatch, SetStateAction, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-const schema = z.object({
+import { useRouter } from "next/navigation";
+import { createTeacher, updateTeacher } from "@/lib/actions";
+import { toast } from "react-toastify";
+export const teacherSchema = z.object({
+  id: z.string().optional(),
   username: z
     .string()
-    .min(3, { message: "Username 3 belgidan kam bo'lmasligi kerak!" })
-    .max(20, { message: "Username 20 ta belgidan kam bo'lmasligi kerak!" }),
-  email: z.string().email({ message: "Email xato kiritildi!" }),
+    .min(3, { message: "Username must be at least 3 characters long!" })
+    .max(20, { message: "Username must be at most 20 characters long!" }),
   password: z
     .string()
-    .min(8, { message: "Parol 8 ta belgidan kam bo'lmasligi kerak!" }),
-  firstname: z
+    .min(8, { message: "Password must be at least 8 characters long!" })
+    .optional()
+    .or(z.literal("")),
+  name: z.string().min(1, { message: "First name is required!" }),
+  surname: z.string().min(1, { message: "Last name is required!" }),
+  email: z
     .string()
-    .min(1, { message: "First Name talablarga javob bermaydi!" }),
-  lastname: z
-    .string()
-    .min(1, { message: "Last Name talablarga javob bermaydi!" }),
-  phone: z.string().min(1, { message: "Phone talablarga javob bermaydi!" }),
-  address: z.string().min(1, { message: "Address talablarga javob bermaydi!" }),
-  BloodType: z
-    .string()
-    .min(1, { message: "BloodType talablarga javob bermaydi!" }),
-  birthday: z.date({ message: "Birthday talablarga javob bermaydi!" }),
-  AAA: z.enum(["male", "female"], { message: "AAA talablarga javob bermaydi" }),
-  img: z.instanceof(File, { message: "Img talablarga javob bermaydi!" }),
+    .email({ message: "Invalid email address!" })
+    .optional()
+    .or(z.literal("")),
+  phone: z.string().optional(),
+  address: z.string(),
+  bloodType: z.string().min(1, { message: "Blood Type is required!" }),
+  birthday: z.coerce.date({ message: "Birthday is required!" }),
+  sex: z.enum(["MALE", "FEMALE"], { message: "Sex is required!" }),
+  subjects: z.array(z.string()).optional(), // subject ids
 });
-type Inputs = z.infer<typeof schema>;
+// type DefaultTypes = {
+//   id: string;
+//   username: string;
+//   password: string;
+//   name: string;
+//   surname: string;
+//   email: string;
+//   phone: string;
+//   address: string;
+//   bloodType: string;
+//   birthday: Date;
+//   sex: "MALE" | "FEMALE";
+//   subjects: [];
+// };
+export type TeacherSchema = z.infer<typeof teacherSchema>;
 
-function TeacherFrom({ type }: { type: string }) {
+function TeacherFrom({
+  type,
+  data,
+  setOpen,
+  relatedData,
+}: {
+  type: string;
+  data?: Partial<TeacherSchema>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  relatedData?: any;
+}) {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({ resolver: zodResolver(schema) });
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  } = useForm<TeacherSchema>({
+    resolver: zodResolver(teacherSchema),
+    defaultValues: {
+      id: data?.id,
+      username: data?.username || "",
+      password: "",
+      name: data?.name || "",
+      surname: data?.surname || "",
+      email: data?.email || "",
+      phone: data?.phone || "",
+      address: data?.address || "",
+      bloodType: data?.bloodType || "",
+      birthday: data?.birthday ? new Date(data.birthday) : undefined,
+      sex: data?.sex || "MALE",
+      subjects: data?.subjects || [],
+    },
+  });
+
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const router = useRouter();
+  const onSubmit: SubmitHandler<TeacherSchema> = (formData) => {
+    startTransition(async () => {
+      const res =
+        type === "update"
+          ? await updateTeacher(formData)
+          : await createTeacher(formData);
+
+      if (res.success) {
+        toast.success(
+          type === "update" ? "Teacher yangilandi!" : "Teacher yaratildi!"
+        );
+        setOpen(false);
+        router.refresh();
+      } else {
+        toast.error("Xatolik yuz berdi");
+      }
+    });
+  };
+
+  const { subjects } = relatedData;
+
   return (
     <div>
       <form className="flex flex-col gap-8 " onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="text-xl font-semibold">Create a New teacher</h1>
+        <h1 className="text-xl font-semibold text-black">
+          {type === "create" ? "Create a new teacher" : "Update a teacher"}
+        </h1>
         <span className="text-gray-400 text-md">
           Authentification Information
         </span>
@@ -49,7 +120,7 @@ function TeacherFrom({ type }: { type: string }) {
             <label className="text-gray-400 text-md">Username</label>
             <input
               type="text"
-              className="ring-[1.5px] rounded-md py-1 px-2"
+              className="ring-[1.5px] rounded-md py-1 px-2 text-black"
               {...register("username")}
             />
             {errors.username?.message && (
@@ -63,7 +134,7 @@ function TeacherFrom({ type }: { type: string }) {
             <label className="text-gray-400 text-md">Email</label>
             <input
               type="text"
-              className="ring-[1.5px] rounded-md py-1 px-2"
+              className="ring-[1.5px] rounded-md py-1 px-2 text-black"
               {...register("email")}
             />
             {errors.email?.message && (
@@ -77,7 +148,7 @@ function TeacherFrom({ type }: { type: string }) {
             <label className="text-gray-400 text-md">Password</label>
             <input
               type="password"
-              className="ring-[1.5px] rounded-md py-1 px-2"
+              className="ring-[1.5px] rounded-md py-1 px-2 text-black"
               {...register("password")}
             />
             {errors.password?.message && (
@@ -94,12 +165,12 @@ function TeacherFrom({ type }: { type: string }) {
               <label className="text-gray-400 text-md">FirstName</label>
               <input
                 type="text"
-                className="ring-[1.5px] rounded-md py-1 px-2"
-                {...register("firstname")}
+                className="ring-[1.5px] rounded-md py-1 px-2 text-black"
+                {...register("name")}
               />
-              {errors.firstname?.message && (
+              {errors.name?.message && (
                 <span className="text-red-500 text-sm">
-                  {errors.firstname.message.toString()}
+                  {errors.name.message.toString()}
                 </span>
               )}
             </div>
@@ -108,12 +179,12 @@ function TeacherFrom({ type }: { type: string }) {
               <label className="text-gray-400 text-md">LastName</label>
               <input
                 type="text"
-                className="ring-[1.5px] rounded-md py-1 px-2"
-                {...register("lastname")}
+                className="ring-[1.5px] rounded-md py-1 px-2 text-black"
+                {...register("surname")}
               />
-              {errors.lastname?.message && (
+              {errors.surname?.message && (
                 <span className="text-red-500 text-sm">
-                  {errors.lastname.message.toString()}
+                  {errors.surname.message.toString()}
                 </span>
               )}
             </div>
@@ -121,8 +192,8 @@ function TeacherFrom({ type }: { type: string }) {
             <div className="flex flex-col space-y-2 flex-1">
               <label className="text-gray-400 text-md">Phone</label>
               <input
-                type="password"
-                className="ring-[1.5px] rounded-md py-1 px-2"
+                type="text"
+                className="ring-[1.5px] rounded-md py-1 px-2 text-black"
                 {...register("phone")}
               />
               {errors.phone?.message && (
@@ -137,7 +208,7 @@ function TeacherFrom({ type }: { type: string }) {
               <label className="text-gray-400 text-md">Address</label>
               <input
                 type="text"
-                className="ring-[1.5px] rounded-md py-1 px-2"
+                className="ring-[1.5px] rounded-md py-1 px-2 text-black"
                 {...register("address")}
               />
               {errors.address?.message && (
@@ -151,21 +222,21 @@ function TeacherFrom({ type }: { type: string }) {
               <label className="text-gray-400 text-md">BloodType</label>
               <input
                 type="text"
-                className="ring-[1.5px] rounded-md py-1 px-2"
-                {...register("BloodType")}
+                className="ring-[1.5px] rounded-md py-1 px-2 text-black"
+                {...register("bloodType")}
               />
-              {errors.BloodType?.message && (
+              {errors.bloodType?.message && (
                 <span className="text-red-500 text-sm">
-                  {errors.BloodType.message.toString()}
+                  {errors.bloodType.message.toString()}
                 </span>
               )}
             </div>
-
+            <input type="hidden" {...register("id")} />
             <div className="flex flex-col space-y-2 flex-1">
               <label className="text-gray-400 text-md">Data of birth</label>
               <input
-                type="password"
-                className="ring-[1.5px] rounded-md py-1 px-2"
+                type="date"
+                className="ring-[1.5px] rounded-md py-1 px-2 text-black"
                 {...register("birthday")}
               />
               {errors.birthday?.message && (
@@ -177,44 +248,40 @@ function TeacherFrom({ type }: { type: string }) {
           </div>
           <div className="flex items-center justify-between mt-4 p-1">
             <div className="flex flex-col gap-2 w-full md:w-1/4">
-              <div className="space-y-2">
-                <label className="text-xs text-gray-500">AAA</label>
-                <select
-                  className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-                  {...register("AAA")}
-                >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-                {errors.AAA?.message && (
-                  <p className="text-xs text-red-400">
-                    {errors.AAA.message.toString()}
-                  </p>
-                )}
-              </div>
+              <label className="text-xs text-gray-500">Sex</label>
+              <select
+                className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full text-black"
+                {...register("sex")}
+                defaultValue={data?.sex}
+              >
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+              </select>
+              {errors.sex?.message && (
+                <p className="text-xs text-red-400">
+                  {errors.sex.message.toString()}
+                </p>
+              )}
             </div>
-            <div className="flex gap-2 w-full md:w-1/4 justify-center">
-              <div>
-                {" "}
-                <label
-                  className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
-                  htmlFor="img"
-                >
-                  <Image src="/upload.png" alt="" width={28} height={28} />
-                  <span>Upload a photo</span>
-                </label>
-                <input
-                  type="file"
-                  id="img"
-                  {...register("img")}
-                  className="hidden"
-                />
-                {errors.img?.message && (
-                  <p className="text-xs text-red-400">
-                    {errors.img.message.toString()}
-                  </p>
-                )}
-              </div>
+            <div className="flex flex-col gap-2 w-full md:w-1/4">
+              <label className="text-xs text-gray-500">Subjects</label>
+              <select
+                multiple
+                className="ring-[1.5px] p-2 rounded-md text-black"
+                {...register("subjects")}
+              >
+                {subjects.map((subject) => (
+                  <option key={subject.id} value={String(subject.id)}>
+                    {subject.name}
+                  </option>
+                ))}
+              </select>
+
+              {errors.subjects?.message && (
+                <p className="text-xs text-red-400">
+                  {errors.subjects.message.toString()}
+                </p>
+              )}
             </div>
           </div>
         </div>

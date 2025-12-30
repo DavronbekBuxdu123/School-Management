@@ -14,64 +14,64 @@ import {
 
 const data = [
   {
-    name: "Jan",
-    income: 4000,
-    expense: 2400,
+    oy: "Yanvar",
+    daromad: 4000,
+    xarajat: 2400,
   },
   {
-    name: "Feb",
-    income: 3000,
-    expense: 1398,
+    oy: "Fevral",
+    daromad: 3000,
+    xarajat: 1398,
   },
   {
-    name: "Mar",
-    income: 2000,
-    expense: 9800,
+    oy: "Mart",
+    daromad: 2000,
+    xarajat: 9800,
   },
   {
-    name: "Apr",
-    income: 2780,
-    expense: 3908,
+    oy: "Aprel",
+    daromad: 2780,
+    xarajat: 3908,
   },
   {
-    name: "May",
-    income: 1890,
-    expense: 4800,
+    oy: "May",
+    daromad: 1890,
+    xarajat: 4800,
   },
   {
-    name: "Jun",
-    income: 2390,
-    expense: 3800,
+    oy: "Iyun",
+    daromad: 2390,
+    xarajat: 3800,
   },
   {
-    name: "Jul",
-    income: 3490,
-    expense: 4300,
+    oy: "Iyul",
+    daromad: 3490,
+    xarajat: 4300,
   },
   {
-    name: "Aug",
-    income: 3490,
-    expense: 4300,
+    oy: "Avgust",
+    daromad: 3490,
+    xarajat: 4300,
   },
   {
-    name: "Sep",
-    income: 3490,
-    expense: 4300,
+    oy: "Sentabr",
+    daromad: 3490,
+    xarajat: 4300,
   },
   {
-    name: "Oct",
-    income: 3490,
-    expense: 4300,
+    oy: "Oktabr",
+    daromad: 3490,
+    xarajat: 4300,
   },
   {
-    name: "Nov",
-    income: 3490,
-    expense: 4300,
+    oy: "Noyabr",
+    daromad: 3490,
+    xarajat: 4300,
   },
   {
-    name: "Dec",
-    income: 3490,
-    expense: 4300,
+    oy: "Dekabr",
+    daromad: 3490,
+    xarajat: 4300,
   },
 ];
 
@@ -79,7 +79,7 @@ const FinanceChart = () => {
   return (
     <div className="bg-white rounded-xl w-full h-full p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-lg font-semibold">Finance</h1>
+        <h1 className="text-lg font-semibold">Moliyaviy diagramma</h1>
         <Image src="/moreDark.png" alt="" width={20} height={20} />
       </div>
       <ResponsiveContainer width="100%" height="90%">
@@ -96,7 +96,7 @@ const FinanceChart = () => {
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
           <XAxis
-            dataKey="name"
+            dataKey="oy"
             axisLine={false}
             tick={{ fill: "#d1d5db" }}
             tickLine={false}
@@ -116,13 +116,13 @@ const FinanceChart = () => {
           />
           <Line
             type="monotone"
-            dataKey="income"
+            dataKey="daromad"
             stroke="#C3EBFA"
             strokeWidth={5}
           />
           <Line
             type="monotone"
-            dataKey="expense"
+            dataKey="xarajat"
             stroke="#CFCEFF"
             strokeWidth={5}
           />

@@ -1,4 +1,4 @@
-import BigCalendar from "@/components/BigCalendar";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EventCalendar from "@/components/EventCalendar";
 import NewsComponent from "@/components/NewsComponent";
 import React from "react";
@@ -11,7 +11,7 @@ function StudentPage() {
           <h1 className="text-lg font-semibold">Class (9A)</h1>
         </div>
         <div>
-          <BigCalendar />
+          <BigCalendarContainer id="studentId" type="classId" />
         </div>
       </div>
       <div className="w-full lg:w-1/3 bg-white flex flex-col gap-8 ">

@@ -1,22 +1,73 @@
 "use client";
+import { deleteClass, deleteSubject, deleteTeacher } from "@/lib/actions";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useState,
+  useTransition,
+} from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { toast } from "react-toastify";
+import { FormContainerProps } from "./FormContainer";
 
 // import TeacherFrom from "./forms/TeacherFrom";
 // import StudentForm from "./forms/StudentForm";
 const forms: {
-  [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
+  [key: string]: (
+    setOpen: Dispatch<SetStateAction<boolean>>,
+    type: "create" | "update",
+    data?: any,
+    relatedData?: any
+  ) => JSX.Element;
 } = {
-  teacher: (type, data) => <TeacherFrom type={type} />,
-  student: (type, data) => <StudentForm type={type} />,
+  teacher: (setOpen, type, data, relatedData) => (
+    <TeacherFrom
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+  subject: (setOpen, type, data, relatedData) => (
+    <SubjectForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+  student: (setOpen, type, data, relatedData) => (
+    <StudentForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+  class: (setOpen, type, data, relatedData) => (
+    <ClassForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
 };
+
 const TeacherFrom = dynamic(() => import("./forms/TeacherFrom"), {
   loading: () => <h1>Loading...</h1>,
 });
+const ClassForm = dynamic(() => import("./forms/ClassForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 const StudentForm = dynamic(() => import("./forms/StudentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 
@@ -25,41 +76,67 @@ function FormModal({
   type,
   data,
   id,
-}: {
-  table:
-    | "teacher"
-    | "student"
-    | "parent"
-    | "subject"
-    | "class"
-    | "lesson"
-    | "exam"
-    | "assignment"
-    | "result"
-    | "attendance"
-    | "event"
-    | "announcements";
-  type: "create" | "delete" | "update";
-  data?: any;
-  id?: number;
-}) {
+  relatedData,
+}: FormContainerProps & { relatedData?: any }) {
   const [open, setOpen] = useState(false);
-
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const Form = () => {
-    return type === "delete" && id ? (
-      <form action="" className="p-4 flex flex-col gap-4">
-        <span className="text-center font-medium">
-          All data will be lost. Are you sure you want to delete this {table}?
-        </span>
-        <button className="bg-red-700 text-white py-2 px-4 rounded-md border-none w-max self-center">
-          Delete
-        </button>
-      </form>
-    ) : type === "create" || type === "update" ? (
-      forms[table](type, data)
-    ) : (
-      "Form not found!"
-    );
+    if (type === "delete" && id) {
+      return (
+        <div className="p-4 flex flex-col gap-4">
+          <span className="text-center font-medium">
+            Haqiqatdan ham jadvaldan shu {table} ni o'chirasizmi?
+          </span>
+
+          <button
+            onClick={() => {
+              startTransition(async () => {
+                let res: { success: boolean } | undefined;
+                switch (table) {
+                  case "subject":
+                    res = await deleteSubject({ id: Number(id) });
+                    break;
+                  case "class":
+                    res = await deleteClass({ id: Number(id) });
+                    break;
+                  case "teacher":
+                    res = await deleteTeacher({ id: id.toString() });
+                    break;
+                  case "student":
+                    res = await deleteTeacher({ id: id.toString() });
+                    break;
+
+                  default:
+                    break;
+                }
+                if (res?.success) {
+                  router.refresh();
+                  toast.success("Muvaffiqiyatli o'chirildi");
+                  setOpen(false);
+                } else {
+                  toast.error("Xatolik yuz berdi");
+                }
+              });
+            }}
+            disabled={isPending}
+            className="bg-red-700 text-white py-2 px-4 rounded-md self-center"
+          >
+            {isPending ? "Deleting..." : "Delete"}
+          </button>
+        </div>
+      );
+    }
+
+    if (type === "create" || type === "update") {
+      return forms[table] ? (
+        forms[table](setOpen, type, data, relatedData)
+      ) : (
+        <span>Form not found!</span>
+      );
+    }
+
+    return <span>Form not found!</span>;
   };
 
   return (
