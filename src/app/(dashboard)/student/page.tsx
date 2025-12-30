@@ -14,7 +14,11 @@ const StudentPage = async () => {
           <h1 className="text-lg font-semibold">Class (9A)</h1>
         </div>
         <div>
-          <BigCalendarContainer id={userId!} type="classId" />
+          {userId ? (
+            <BigCalendarContainer id={userId} type="classId" />
+          ) : (
+            <p>Loading...</p>
+          )}
         </div>
       </div>
       <div className="w-full lg:w-1/3 bg-white flex flex-col gap-8 ">
