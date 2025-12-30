@@ -89,29 +89,6 @@ const menuItems = [
       },
     ],
   },
-  {
-    title: "BOSHQA",
-    items: [
-      {
-        icon: "/profile.png",
-        label: "Profil",
-        href: "/profile",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: "/setting.png",
-        label: "Sozlamalar",
-        href: "/settings",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: "/logout.png",
-        label: "Chiqish",
-        href: "/logout",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-    ],
-  },
 ];
 
 import { useUser } from "@clerk/nextjs";
