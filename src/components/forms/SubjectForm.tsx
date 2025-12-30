@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export const Subjectschema = z.object({
   id: z.coerce.number().optional(),
-  name: z.string().min(3, { message: "Fan nomi 3 harfdan kam bo'lmasin!" }),
+  name: z.string().min(3, { message: "Fan nomi 3 harfdan kam bo’lmasin!" }),
   teachers: z.array(z.string()),
 });
 type Inputs = z.infer<typeof Subjectschema>;
@@ -82,7 +82,7 @@ function SubjectForm({
         />
         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
 
-        <label className="text-gray-500">O'qituvchilar</label>
+        <label className="text-gray-500">O’qituvchilar</label>
         <select
           multiple
           {...register("teachers")}

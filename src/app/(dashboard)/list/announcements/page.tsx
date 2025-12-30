@@ -123,7 +123,7 @@ const AnnouncementListPage = async ({
       {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">
-          Barcha e'lonlar
+          Barcha e’lonlar
         </h1>
         <div className="w-full md:w-auto flex flex-col md:flex-row gap-8 items-center">
           <TableSearch />

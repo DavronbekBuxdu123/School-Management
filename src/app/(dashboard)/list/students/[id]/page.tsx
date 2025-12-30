@@ -152,43 +152,43 @@ const SingleStudentPage = async ({
       {/* RIGHT */}
       <div className="w-full lg:w-1/3 flex flex-col gap-4">
         <div className="bg-white p-4 rounded-md">
-          <h1 className="text-xl font-semibold">Bo'limlar</h1>
+          <h1 className="text-xl font-semibold">Bo’limlar</h1>
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
             <Link
               className="p-3 rounded-md bg-pink-50"
               href={`/list/classes?classId=${2}`}
             >
-              O'quvchining sinflari
+              O’quvchining sinflari
             </Link>
             <Link
               className="p-3 rounded-md bg-purple-200"
               href={`/list/teachers?classId=${2}`}
             >
-              O'quvchining o'qituvchilari
+              O’quvchining o’qituvchilari
             </Link>
             <Link
               className="p-3 rounded-md bg-purple-200"
               href={`/list/lessons?classId=${2}`}
             >
-              O'quvchining darslari
+              O’quvchining darslari
             </Link>
             <Link
               className="p-3 rounded-md bg-pink-50"
               href={`/list/exams?classId=${2}`}
             >
-              O'quvchining imtihonlari
+              O’quvchining imtihonlari
             </Link>
             <Link
               className="p-3 rounded-md bg-pink-200"
               href={`/list/assignments?classId=${2}`}
             >
-              O'quvchining vazifalari
+              O’quvchining vazifalari
             </Link>
             <Link
               className="p-3 rounded-md bg-purple-200"
               href={`/list/results?studentId=${"student2"}`}
             >
-              O'quvchining natijalari
+              O’quvchining natijalari
             </Link>
           </div>
         </div>

@@ -94,7 +94,7 @@ function ClassForm({
             )}
           </div>
           <div className="flex flex-col space-y-2 flex-1">
-            <label className="text-gray-400 text-md">Sig'im</label>
+            <label className="text-gray-400 text-md">Sig’im</label>
             <input
               type="text"
               className="ring-[1.5px] rounded-md py-1 px-2"
