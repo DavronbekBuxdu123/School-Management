@@ -3,6 +3,7 @@ import EventCalendar from "@/components/EventCalendar";
 import EventCalendarContainer from "@/components/EventCalendarContainer";
 import NewsComponent from "@/components/NewsComponent";
 import { getUserRole } from "@/lib/utils";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const StudentPage = async ({
@@ -11,7 +12,7 @@ const StudentPage = async ({
   searchParams: { [keys: string]: string | undefined };
 }) => {
   const { userId } = await getUserRole();
-
+  if (!userId) redirect("/sign-in");
   return (
     <div className="p-4 flex flex-col gap-4 lg:flex-row">
       <div className="w-full lg:w-2/3 bg-white rounded-lg p-4">

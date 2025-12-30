@@ -1,8 +1,8 @@
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EventCalendarContainer from "@/components/EventCalendarContainer";
-
 import NewsComponent from "@/components/NewsComponent";
 import { getUserRole } from "@/lib/utils";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const ParentPage = async ({
@@ -11,6 +11,7 @@ const ParentPage = async ({
   searchParams: { [keys: string]: string | undefined };
 }) => {
   const { userId } = await getUserRole();
+  if (!userId) redirect("/sign-in");
   return (
     <div className="p-4 flex flex-col gap-4 lg:flex-row flex-1">
       <div className="w-full lg:w-2/3 bg-white rounded-lg p-4">
