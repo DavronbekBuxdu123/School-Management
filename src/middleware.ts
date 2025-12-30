@@ -14,11 +14,13 @@ export default clerkMiddleware(async (auth, req) => {
 
   const { sessionClaims } = await auth();
 
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const role = (sessionClaims?.metadata as { role?: string })?.role ?? "";
 
   for (const { matcher, allowedRoles } of matchers) {
-    if (matcher(req) && !allowedRoles.includes(role)) {
-      return NextResponse.redirect(new URL(`/${role}`, req.url));
+    if (matcher(req) && (!role || !allowedRoles.includes(role))) {
+      return NextResponse.redirect(
+        new URL(`/${role ?? "unauthorized"}`, req.url)
+      );
     }
   }
 });
