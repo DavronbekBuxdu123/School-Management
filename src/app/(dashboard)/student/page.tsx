@@ -1,10 +1,15 @@
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EventCalendar from "@/components/EventCalendar";
+import EventCalendarContainer from "@/components/EventCalendarContainer";
 import NewsComponent from "@/components/NewsComponent";
 import { getUserRole } from "@/lib/utils";
 import React from "react";
 
-const StudentPage = async () => {
+const StudentPage = async ({
+  searchParams,
+}: {
+  searchParams: { [keys: string]: string | undefined };
+}) => {
   const { userId } = await getUserRole();
 
   return (
@@ -23,7 +28,7 @@ const StudentPage = async () => {
       </div>
       <div className="w-full lg:w-1/3 bg-white flex flex-col gap-8 ">
         <div className="">
-          <EventCalendar />
+          <EventCalendarContainer searchParams={searchParams} />
           <NewsComponent />
         </div>
       </div>

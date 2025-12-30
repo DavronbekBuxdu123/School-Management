@@ -1,10 +1,15 @@
 import BigCalendarContainer from "@/components/BigCalendarContainer";
+import EventCalendarContainer from "@/components/EventCalendarContainer";
 
 import NewsComponent from "@/components/NewsComponent";
 import { getUserRole } from "@/lib/utils";
 import React from "react";
 
-const ParentPage = async () => {
+const ParentPage = async ({
+  searchParams,
+}: {
+  searchParams: { [keys: string]: string | undefined };
+}) => {
   const { userId } = await getUserRole();
   return (
     <div className="p-4 flex flex-col gap-4 lg:flex-row flex-1">
@@ -17,7 +22,10 @@ const ParentPage = async () => {
         </div>
       </div>
       <div className="w-full lg:w-1/3 bg-white flex flex-col gap-8 ">
-        <NewsComponent />
+        <div className="">
+          <EventCalendarContainer searchParams={searchParams} />
+          <NewsComponent />
+        </div>
       </div>
     </div>
   );
