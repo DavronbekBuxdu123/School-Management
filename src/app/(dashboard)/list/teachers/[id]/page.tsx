@@ -11,7 +11,7 @@ import FormContainer from "@/components/FormContainer";
 
 const SingleTeacherPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const { sessionClaims } = auth();
+  const { sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
   const teacher:
     | (Teacher & {
