@@ -28,7 +28,7 @@ const TeacherListPage = async ({
       accessor: "info",
     },
     {
-      header: "O'qituvchi ID",
+      header: "O’qituvchi ID",
       accessor: "teacherId",
       className: "hidden md:table-cell",
     },
@@ -148,7 +148,7 @@ const TeacherListPage = async ({
       <div className="flex  items-center justify-between">
         <div>
           <span className="text-md font-semibold hidden md:block">
-            Barcha O'qituvchilar
+            Barcha O’qituvchilar
           </span>
         </div>
         <div className="w-full md:w-auto flex flex-col md:flex-row gap-8 items-center">

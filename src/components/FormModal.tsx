@@ -86,7 +86,7 @@ function FormModal({
       return (
         <div className="p-4 flex flex-col gap-4">
           <span className="text-center font-medium">
-            Haqiqatdan ham jadvaldan shu {table} ni o'chirasizmi?
+            Haqiqatdan ham jadvaldan shu {table} ni o’chirasizmi?
           </span>
 
           <button
@@ -112,7 +112,7 @@ function FormModal({
                 }
                 if (res?.success) {
                   router.refresh();
-                  toast.success("Muvaffiqiyatli o'chirildi");
+                  toast.success("Muvaffiqiyatli o’chirildi");
                   setOpen(false);
                 } else {
                   toast.error("Xatolik yuz berdi");
